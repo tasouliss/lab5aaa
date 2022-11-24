@@ -1,0 +1,96 @@
+#include <stdio.h>
+#include "lab5.h"
+#include <string.h>
+#include <ctype.h>
+
+int main(int argc,char *argv[]){
+
+    char user_word[WORDSIZE];
+    char end[]="End-of-words";
+    char dict_word[WORDSIZE];
+    int res1,res2,small_length,i;
+    int userwordlength=0,dictwordlength=0,distance=0,leastdistance=WORDSIZE;
+    char closest_word[WORDSIZE];
+    /*char format[WORDSIZE];*/
+
+    printf("Word to check:\n");
+    /*sprintf(format,"%%%s",WORDSIZE-1);*/
+    scanf("%19s",user_word);
+    userwordlength=strlen(user_word);
+
+    if ( islower(user_word[0])){
+        user_word[0]=user_word[0]-32;
+    }
+    
+    for (i=1;i<WORDSIZE;i++){
+        if (isupper(user_word[i])){
+            user_word[i]=user_word[i]+32;
+        }
+    }
+        printf("Dictionary words:\n");
+
+    do {
+        /*sprintf(format,"%%%s",WORDSIZE-1);*/
+        scanf("%19s",dict_word);
+        dictwordlength=strlen(dict_word);
+
+        if (dictwordlength>userwordlength) {
+            distance=dictwordlength-userwordlength;
+            small_length=userwordlength;
+        }
+        else {
+            distance=userwordlength-dictwordlength;
+            small_length=dictwordlength;
+        }
+
+    
+        if(islower(dict_word[0])) {
+        dict_word[0]=dict_word[0]-32;
+        }
+
+        for (i=1;i<WORDSIZE;i++){
+            if (isupper(dict_word[i])){
+                dict_word[i]=dict_word[i]+32;
+            }
+        }
+
+        /*else ;*/
+
+       /* printf("\"%s\"\n",dict_word);*/
+        res1=strcmp(user_word,dict_word);
+        res2=strcmp(dict_word,end);
+
+        if (res2==0) {
+            break;
+        }
+
+        else if (res1==0) {
+            printf("\"%s\" is correct\n",dict_word);
+            break;
+        }
+        for (i=0;i<small_length;i++){
+            if (user_word[i]!=dict_word[i]) {
+                distance++;
+            }
+            
+        }
+        printf("\"%s\" distance: %d\n",dict_word,distance);
+        
+        if (leastdistance>distance){
+            leastdistance=distance;
+            strcpy (closest_word,dict_word);
+        }        
+    }
+    while(strcmp(dict_word,end)!=0);
+
+    if (res1!=0){
+        if (leastdistance!=WORDSIZE){
+        printf("\"%s\" is not correct.\n",user_word);
+        printf("Suggestion:\"%s\" %d\n",closest_word,leastdistance);
+        }
+        else {
+            printf("No suggestion.\n");
+        }
+    }
+return 0;
+}
